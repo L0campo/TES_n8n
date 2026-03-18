@@ -1,0 +1,3045 @@
+{
+  "name": "bot_Luis",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2512,
+        1472
+      ],
+      "id": "c80a03a2-0fca-4cd2-b1e4-bc3f9a72d45a",
+      "name": "Telegram Trigger",
+      "webhookId": "58dc428e-687c-44f8-a9eb-4079b5f0ca00",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telegram_user",
+              "lookupValue": "={{ $json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1568,
+        1536
+      ],
+      "id": "b33f9c65-1d50-4f55-80a9-960b9a9655f2",
+      "name": "identificacion usuario",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "hola",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "7f204325-4b6d-4a36-9ec8-200586b8d69d"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "904c552f-283f-40e2-9219-3664aefbe70e",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -2096,
+        1456
+      ],
+      "id": "914f05d2-9a2e-4496-b49f-8e790fcf9589",
+      "name": "filtro saludo",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Tus Solicitudes Registradas:\n\n{{ $items().map(item => \"ID: \" + item.json.id_ticket + \" |  \" + item.json.descripcion).join('\\n') }}\n\n\nPor favor, escribe el número de ID del ticket que deseas consultar.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        1744
+      ],
+      "id": "471a8e68-41a2-40e9-bde2-f2a6e73acc6c",
+      "name": "Mensaje opcion 2",
+      "webhookId": "d45c180e-0db4-4e27-af7a-d1f29ea1f132",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3323ec51-56a3-42e8-b359-de2326e791bf",
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "0",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "50b748ff-16c6-4ca7-a6b9-d6884fe0c962",
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2809c799-9fd7-4438-889d-74bc1f68ad4c",
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "dec2da50-5df5-4dd7-9d73-c9a19d5872cf",
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "9a33fffb-085b-45de-b852-58a9a1bd0b2a",
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "4",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "38403654-d9ea-41ac-a957-6110a6ad3bb5",
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "5",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "1ec4c57e-cee9-43bf-882c-ff15ede16a1d",
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "9",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -784,
+        1488
+      ],
+      "id": "eaae0164-b803-4d56-b703-e29ffb59cdb5",
+      "name": "opciones",
+      "executeOnce": false,
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Usuario: {{ $node[\"identificacion usuario\"].json[\"nombre\"] }}\nBot ID: asis_bot_v1.0\n\nEscribe 9 para volver al menú principal.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        2528
+      ],
+      "id": "181f986a-3eb1-4bf2-a619-28ab1cefc405",
+      "name": "configuracion",
+      "webhookId": "692b083a-bde4-4782-825d-e1b02a517f22",
+      "executeOnce": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            "nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+            "rol": "usuario",
+            "activo": "si",
+            " estado": "esperando_tipo"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "activo",
+              "displayName": "activo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": " estado",
+              "displayName": " estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        176
+      ],
+      "id": "0476b958-e7b1-4653-b4e4-e7d41a7e90f1",
+      "name": "guardar1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 588250120,
+          "mode": "list",
+          "cachedResultName": "SOLICITUDES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=588250120"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "prioridad": "={{ $('Telegram Trigger').item.json.message.text.includes('@') ? $('Telegram Trigger').item.json.message.text.split(' ').pop().toLowerCase() : $('Telegram Trigger').item.json.message.text.toLowerCase() }}",
+            "estado": "abierto",
+            "id_ticket": "={{ ($node[\"Telegram Trigger\"].json.message.text.includes('Soporte') ? 'SUP-' : 'GEN-') + $now.toFormat('yyyyMMddHHmmss') }}"
+          },
+          "matchingColumns": [
+            "id_ticket"
+          ],
+          "schema": [
+            {
+              "id": "id_ticket",
+              "displayName": "id_ticket",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tipo",
+              "displayName": "tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prioridad",
+              "displayName": "prioridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "descripcion",
+              "displayName": "descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "creado_por",
+              "displayName": "creado_por",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fecha_creacion",
+              "displayName": "fecha_creacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1616,
+        80
+      ],
+      "id": "e6013f99-4198-4fc5-98f4-f0cae5ac7ae5",
+      "name": "guardar prioridad",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            "nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+            "rol": "usuario",
+            "activo": "si",
+            " estado": "esperando_prioridad"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "activo",
+              "displayName": "activo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": " estado",
+              "displayName": " estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "descripcion_temporal",
+              "displayName": "descripcion_temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -480,
+        -32
+      ],
+      "id": "e4200612-8817-42a7-a3bd-24fae7ca5234",
+      "name": "estado1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            " estado": "pendiente"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "activo",
+              "displayName": "activo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": " estado",
+              "displayName": " estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "descripcion_temporal",
+              "displayName": "descripcion_temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        960
+      ],
+      "id": "e80a77d8-a830-422f-8a5e-fa22a62d247c",
+      "name": "estado2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            "nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+            "descripcion_temporal": "={{ $('Telegram Trigger').item.json.message.text }}",
+            " estado": "esperando_seleccion"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "activo",
+              "displayName": "activo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": " estado",
+              "displayName": " estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "descripcion_temporal",
+              "displayName": "descripcion_temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        1552
+      ],
+      "id": "fdb60c2d-35df-4573-a759-860c3b060a42",
+      "name": "estado3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5140b67d-c557-4c88-a045-31cc2188d72f",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.text.length }}",
+              "rightValue": 10,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "d9d20577-29c5-4d3b-811f-c4f72c85b92d",
+              "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+              "rightValue": "^\\d+$",
+              "operator": {
+                "type": "string",
+                "operation": "notRegex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -832,
+        272
+      ],
+      "id": "0de3a09b-0038-405f-940c-72b5d4531c0f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telegram_user",
+              "lookupValue": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1312,
+        1536
+      ],
+      "id": "37a8c234-2287-41dc-a183-ec3f3daaa387",
+      "name": "estado solicitud",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            "nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+            "rol": "usuario",
+            " estado": "esperando_descripcion"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "activo",
+              "displayName": "activo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": " estado",
+              "displayName": " estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1168,
+        384
+      ],
+      "id": "2c5ea807-c1a4-40f7-9ded-1e30acf02267",
+      "name": "cambio estado",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "dcd3d878-044c-45d4-927e-58171095d023",
+              "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"].length }}",
+              "rightValue": 10,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -800,
+        1040
+      ],
+      "id": "92e2038e-5c7e-4039-a3c9-02984fa81ae3",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 834995129,
+          "mode": "list",
+          "cachedResultName": "LOGS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=834995129"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $now }}",
+            "telegram_user": "={{\n  (() => {\n    const texto = $node[\"Telegram Trigger\"].json.message.text;\n    const menuPrincipal = {\n      '0': 'Menú / Ayuda',\n      '1': 'Menú / Crear Solicitud',\n      '2': 'Menú / Consultar Estado',\n      '3': 'Menú / Mis Solicitudes',\n      '4': 'Menú / Reportes',\n      '5': 'Menú / Configuración',\n      '9': 'Menú / Volver al Inicio',\n      '/start': 'Inicio / Bienvenida'\n    };\n\n    // 1. Si es un número del menú principal o /start\n    if (menuPrincipal[texto]) {\n      return menuPrincipal[texto];\n    }\n\n    // 2. Si no es un número del menú, revisar en qué estado está el usuario\n    if ($node[\"opciones\"]?.activeRule !== undefined) {\n      const nombresOpciones = ['Ayuda', 'Crear', 'Consultar', 'Mis Solicitudes', 'Reportes', 'Configuración'];\n      return `Procesando: ${nombresOpciones[$node[\"opciones\"].activeRule] || 'Opción Desconocida'}`;\n    }\n\n    if ($node[\"Estado\"]?.activeRule !== undefined) {\n      const nombresEstados = ['Prioridad', 'Descripción', 'Estado 2', 'Estado 3', 'Estado 4'];\n      return `Flujo: ${nombresEstados[$node[\"Estado\"].activeRule] || 'Procesando Datos'}`;\n    }\n\n    return 'Inicio / Entrada de Texto';\n  })()\n}}",
+            "pantalla": "={{ $node[\"Telegram Trigger\"].json.message.text }}",
+            "opcion": "={{ $node[\"Telegram Trigger\"].json.message.text }}",
+            "resultado": "={{ $node[\"If\"]?.currentContext?.output == 'false' ? 'Error: Descripción muy corta' : 'Navegación exitosa' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "pantalla",
+              "displayName": "pantalla",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "opcion",
+              "displayName": "opcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "resultado",
+              "displayName": "resultado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2576,
+        720
+      ],
+      "id": "2b7a32a1-cb59-4512-a510-36604761be31",
+      "name": "log de navegacion",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 588250120,
+          "mode": "list",
+          "cachedResultName": "SOLICITUDES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=588250120"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_id": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            "descripcion": "={{ $('Telegram Trigger').item.json.message.text }}",
+            "id_ticket": "={{ ($node[\"Telegram Trigger\"].json.message.text.includes('Soporte') ? 'SUP-' : 'GEN-') + $now.toFormat('yyyyMMddHHmmss') }}",
+            "fecha_creacion": "={{ $now.toFormat('dd/MM/yyyy HH:mm') }}",
+            "tipo": "={{ $node[\"Telegram Trigger\"].json.message.text.toLowerCase().includes('soporte') ? 'Soporte Técnico' : ($node[\"Telegram Trigger\"].json.message.text.toLowerCase().includes('acceso') ? 'Accesos/Cuentas' : 'Otros') }}"
+          },
+          "matchingColumns": [
+            "telegram_id"
+          ],
+          "schema": [
+            {
+              "id": "id_ticket",
+              "displayName": "id_ticket",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tipo",
+              "displayName": "tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "prioridad",
+              "displayName": "prioridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "descripcion",
+              "displayName": "descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "creado_por",
+              "displayName": "creado_por",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fecha_creacion",
+              "displayName": "fecha_creacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        944,
+        384
+      ],
+      "id": "f4d83d7b-aaae-41e8-96a3-2c7b73d1df36",
+      "name": "Guardar descripcion",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a498205c-9820-4228-9387-770f0e1725ae",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "9",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "37351ab4-36af-4c22-8950-a63abd414244",
+                    "leftValue": "={{ $json[' estado'] }}",
+                    "rightValue": "esperando_descripcion",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6a96f6a3-0388-4e2a-87e6-0b3d64e5552d",
+                    "leftValue": "={{ $json[' estado'] }}",
+                    "rightValue": "esperando_tipo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "39d5c612-7cab-4288-a1ea-e35eeb7f3c31",
+                    "leftValue": "={{ $json[' estado'] }}",
+                    "rightValue": "pendiente",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2ee1aba1-2214-43bd-aeac-751f42f84719",
+                    "leftValue": "={{ $json[' estado'] }}",
+                    "rightValue": "inicio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f26397eb-6f51-47bb-a77f-1d610e1cf12c",
+                    "leftValue": "={{ $json[' estado'] }}",
+                    "rightValue": "esperando_prioridad",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "afb74299-b590-4bf8-ac53-20cbfe712c8f",
+                    "leftValue": "={{ $json[' estado'] }}",
+                    "rightValue": "esperando_id_ticket",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "974daea8-21c1-4176-bec3-68724a52cd3d",
+                    "leftValue": "={{ $json[' estado'] }}",
+                    "rightValue": "esperando_seleccion",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "7fac14c9-3177-400d-8132-add2c6911c1c",
+                    "leftValue": "={{ $json[' estado'] }}",
+                    "rightValue": "memu_Falso",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        640
+      ],
+      "id": "da03bd0c-1031-4329-9f14-21479fca2636",
+      "name": "Estado",
+      "notesInFlow": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "especifique su problema en 10 caracteres ",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        1216
+      ],
+      "id": "ae09bd98-61b3-4a63-b8a8-82d1ee34a7d8",
+      "name": "mensaje de error 2",
+      "webhookId": "3171cc22-ee3c-4bad-9c7e-4a97821cb1ef",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "especifique su problema en 10 caracteres ",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -704,
+        368
+      ],
+      "id": "6fc16dab-b835-4540-9f3b-adf435648712",
+      "name": "mensaje de error 1",
+      "webhookId": "ce6568f7-a352-4ce5-bb0f-e3a1ba84c333",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "su solicitud se aguardado correctamente.    \n\nEscribe 9 para regresar  al menú principal",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        -32
+      ],
+      "id": "39d24386-5fa0-48b6-9e31-a5aec240c798",
+      "name": "mensaje de guardar solicitud",
+      "webhookId": "192c9877-92bb-4654-b4fb-cdde1e7c5c68",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "descripción guardad por favor escoja la prioridad  ",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "alta",
+                    "additionalFields": {
+                      "switch_inline_query_current_chat": "alta"
+                    }
+                  },
+                  {
+                    "text": "media",
+                    "additionalFields": {
+                      "switch_inline_query_current_chat": "media"
+                    }
+                  },
+                  {
+                    "text": "baja",
+                    "additionalFields": {
+                      "switch_inline_query_current_chat": "baja"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -96,
+        176
+      ],
+      "id": "82160a5c-8f1a-408a-89e5-3ab615b50d21",
+      "name": "selección de prioridad",
+      "webhookId": "1f0d79ad-5e70-4739-b049-5fba45b53954",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=<b> Información de tu Ticket</b>\n\n<b> ID:</b> {{ $json.id_ticket }}\n<b> Prioridad:</b> {{ $json.prioridad }}\n<b> Descripción:</b> {{ $json.descripcion }}\n<b> Estado actual:</b> {{ $json.estado }}\n\nEscribe 9 para regresar al Menú Principal.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -560,
+        848
+      ],
+      "id": "ab49ddd8-e7f9-4f7b-9775-8403bbfb81e9",
+      "name": "muestras la solicitud",
+      "webhookId": "6b02af95-0292-42fb-bae7-98be9b77daf9",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "opción incorrecta escribe hola para iniciar correctamente .",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        736
+      ],
+      "id": "42ec4cc8-9ab4-43f9-8f35-66131a7b33a1",
+      "name": "opción incorrecta",
+      "webhookId": "ceba2e79-b37c-48c6-8257-6928cca12899",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Hola, soy HelpDeskBot  \nEstoy aquí para asistirte con solicitudes de soporte.  \nPor favor escribe una opción para continuar.  \n\nMenú principal:  \n\n0. Ayuda  \n1. Crear solicitud  \n2. Consultar estado de solicitud  \n3. Mis solicitudes  \n4. Reportes  \n5. Configuración",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        1056
+      ],
+      "id": "e078d2f1-8eb8-4252-b293-49593cf94c29",
+      "name": "inicio",
+      "webhookId": "55460c98-2064-49ba-97fa-1320ce37142c",
+      "executeOnce": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "selecciona el tipo la de solicitud: ",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Soporte Técnico",
+                    "additionalFields": {
+                      "switch_inline_query_current_chat": "Soporte Técnico"
+                    }
+                  },
+                  {
+                    "text": "Acceso y Cuentas",
+                    "additionalFields": {
+                      "switch_inline_query_current_chat": "Acceso y Cuentas"
+                    }
+                  },
+                  {
+                    "text": "preguntas ticket",
+                    "additionalFields": {
+                      "switch_inline_query_current_chat": "preguntas ticket"
+                    }
+                  },
+                  {
+                    "text": "Otros",
+                    "additionalFields": {
+                      "switch_inline_query_current_chat": "Otros"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        1024
+      ],
+      "id": "cc283140-9b30-46e0-bc31-8f4884fea7f5",
+      "name": "tipo de la solicitud",
+      "webhookId": "cb19fc25-25fa-4426-8114-9c7563cb15e1",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            " estado": "esperando_id_ticket"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "activo",
+              "displayName": "activo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": " estado",
+              "displayName": " estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "descripcion_temporal",
+              "displayName": "descripcion_temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        1744
+      ],
+      "id": "05bf18e8-7f6a-4dba-bba7-088bb4d2b609",
+      "name": "cambiar de estado",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Has escogido la opción Crear Solicitud. \nescribe una breve descripción de tu problema",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        1552
+      ],
+      "id": "32cff3d6-0534-4d7d-8847-c834d7b29b20",
+      "name": "descripción de la solicitud",
+      "webhookId": "1861b625-c41a-446a-a997-1afaa331e6e9",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Tu Reporte de Actividad\n\nTotal de solicitudes: {{ $items().length }}\nAbiertas/Pendientes: {{ $items().filter(item => item.json[\"estado\"] == \"abierto\").length }}\nFinalizadas: {{ $items().filter(item => item.json[\"estado\"] == \"cerrado\").length }}\n\n\n Escribe 9 para volver al menú principal.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1552,
+        1968
+      ],
+      "id": "b8873527-8739-4974-ba92-c79599693c08",
+      "name": "reportes",
+      "webhookId": "59dbc21c-f4cc-4395-bf46-61fec1b5ae65",
+      "executeOnce": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=\nTus Solicitudes Registradas:\n\n{{\n  (() => {\n    // Tomamos solo las últimas 10 o 15 solicitudes para no saturar el mensaje\n    const ultimasSolicitudes = $items().slice(-10); \n    \n    const lista = ultimasSolicitudes.map(item => {\n      const id = item.json.id_ticket || 'S/N';\n      const estado = item.json.estado || 'Sin estado';\n      return ` ID: \\`${id}\\` |  Estado: *${estado}*`;\n    }).join('\\n');\n\n    return ` Tus Últimas Solicitudes:\\n\\n${lista}\\n\\n---\\n Escribe 9 para volver al inicio.`;\n  })()\n}}\n---\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        1984
+      ],
+      "id": "220e41d6-b9df-4bc3-85f3-78cce5d43cb4",
+      "name": "solicitudes",
+      "webhookId": "619887fc-fba7-4079-9d40-452c29801f4d",
+      "executeOnce": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 588250120,
+          "mode": "list",
+          "cachedResultName": "SOLICITUDES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=588250120"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id_ticket",
+              "lookupValue": "={{ $('Telegram Trigger').item.json.message.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -784,
+        848
+      ],
+      "id": "b7d09e4e-ede4-44c5-a301-ecd235b7c15a",
+      "name": "encontrar ticket",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 588250120,
+          "mode": "list",
+          "cachedResultName": "SOLICITUDES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=588250120"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telegram_id",
+              "lookupValue": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1264,
+        1984
+      ],
+      "id": "73a7f8b1-3439-4e00-8037-f7b773488687",
+      "name": "cargar los reportes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 588250120,
+          "mode": "list",
+          "cachedResultName": "SOLICITUDES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=588250120"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telegram_id",
+              "lookupValue": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        32,
+        1984
+      ],
+      "id": "441c9c65-13c7-43de-934b-0380ba5dd0ec",
+      "name": "cargar las solicitudes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 588250120,
+          "mode": "list",
+          "cachedResultName": "SOLICITUDES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=588250120"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telegram_id",
+              "lookupValue": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        32,
+        1744
+      ],
+      "id": "e1897c69-6bd0-4b4a-90e0-d82d5c67a62d",
+      "name": "buscar el ticket",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 588250120,
+          "mode": "list",
+          "cachedResultName": "SOLICITUDES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=588250120"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        2224
+      ],
+      "id": "571c647e-ecc5-4360-bc56-73e6bfaaa36d",
+      "name": "TRAER LOS DATOS",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.texto }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        2240
+      ],
+      "id": "5d032675-12b6-4d10-90f9-5efdeb587021",
+      "name": "Send a text message",
+      "webhookId": "cd3845fb-963a-4359-b5c0-29bfc0e7100b",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = items.map(item => item.json);\n\n// Contadores\nlet resumen = {};\nlet total = data.length;\n\n// Contar interacciones (logs)\nlet totalInteracciones = $items(\"log de navegacion\").length;\n\n// Recorrer datos\ndata.forEach(s => {\n  const tipo = s.tipo || \"Otros\";\n  const estado = (s.estado || \"abierto\").toLowerCase();\n\n  if (!resumen[tipo]) {\n    resumen[tipo] = {\n      total: 0,\n      abiertas: 0,\n      en_proceso: 0,\n      cerradas: 0\n    };\n  }\n\n  resumen[tipo].total++;\n\n  if (estado.includes(\"abierto\")) resumen[tipo].abiertas++;\n  else if (estado.includes(\"proceso\")) resumen[tipo].en_proceso++;\n  else if (estado.includes(\"cerrado\")) resumen[tipo].cerradas++;\n});\n\n// Tipo más frecuente\nlet tipoMasFrecuente = \"\";\nlet max = 0;\n\nfor (let tipo in resumen) {\n  if (resumen[tipo].total > max) {\n    max = resumen[tipo].total;\n    tipoMasFrecuente = tipo;\n  }\n}\n\n// Crear texto\nlet texto = `Reporte de solicitudes\\n\\n`;\ntexto += `Resumen general\\n`;\ntexto += `- Tipo más frecuente: ${tipoMasFrecuente}\\n`;\ntexto += `- Total solicitudes: ${total}\\n`;\ntexto += `- Interacciones con el bot: ${totalInteracciones}\\n\\n`;\n\ntexto += `Detalle por tipo\\n`;\n\nlet i = 1;\nfor (let tipo in resumen) {\n  const r = resumen[tipo];\n  texto += `${i}) ${tipo}\\n`;\n  texto += `   - Total: ${r.total}\\n`;\n  texto += `   - Abiertas: ${r.abiertas}\\n`;\n  texto += `   - En proceso: ${r.en_proceso}\\n`;\n  texto += `   - Cerradas: ${r.cerradas}\\n\\n`;\n  i++;\n}\n\nreturn [{ json: { texto } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        2256
+      ],
+      "id": "a51e0090-6816-4cf7-86c5-7e4dfbb80c7d",
+      "name": "PROCESAR LOS DATOS"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Perfecto, estoy generando el reporte de solicitudes.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        2144
+      ],
+      "id": "cade1136-f127-4913-aaee-492191d83f4e",
+      "name": "procesando",
+      "webhookId": "002d33a2-e273-45b3-b717-03e0c4c3c13f",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Reportes\n1. Reporte por tipo de solicitud  \n9. Volver al menú principal",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -736,
+        1984
+      ],
+      "id": "bdcb5ead-4f40-4c70-964e-c3095a741b48",
+      "name": "menú falso",
+      "webhookId": "3d60441a-4547-45a5-86a1-e05af37b47b7",
+      "credentials": {
+        "telegramApi": {
+          "id": "UU8LoML8suz71gzS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys",
+          "mode": "list",
+          "cachedResultName": "documento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "USUARIOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N4pwQsZH7DXZyEUnPOO34iag4GDJxO-eHv5RTIkFcys/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+            " estado": "memu_Falso"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rol",
+              "displayName": "rol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "activo",
+              "displayName": "activo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": " estado",
+              "displayName": " estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "descripcion_temporal",
+              "displayName": "descripcion_temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -768,
+        2288
+      ],
+      "id": "813c42a3-1535-40ec-8159-25ffe9002f2d",
+      "name": "estado",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "O3ASuRjZlTyNCCDX",
+          "name": "luis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d7afac45-c7e6-47dd-a23e-917914224cb9"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "242d97cc-774f-4815-8ce4-43bd767fd9c6",
+                    "leftValue": "={{ $node[\"Telegram Trigger\"].json[\"message\"][\"text\"] }}",
+                    "rightValue": "9",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -592,
+        2336
+      ],
+      "id": "b6dc8d5f-2320-45af-bacd-ed755796fdcf",
+      "name": "Switch"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "filtro saludo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "identificacion usuario": {
+      "main": [
+        [
+          {
+            "node": "estado solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtro saludo": {
+      "main": [
+        [
+          {
+            "node": "inicio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "identificacion usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje opcion 2": {
+      "main": [
+        [
+          {
+            "node": "cambiar de estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "opciones": {
+      "main": [
+        [
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "descripción de la solicitud",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "buscar el ticket",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "cargar las solicitudes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "procesando",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "configuracion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "inicio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "estado1": {
+      "main": [
+        [
+          {
+            "node": "mensaje de guardar solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "estado1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensaje de error 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "estado solicitud": {
+      "main": [
+        [
+          {
+            "node": "Estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cambio estado": {
+      "main": [
+        [
+          {
+            "node": "guardar prioridad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "tipo de la solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensaje de error 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guardar1": {
+      "main": [
+        [
+          {
+            "node": "Guardar descripcion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "guardar prioridad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar descripcion": {
+      "main": [
+        [
+          {
+            "node": "cambio estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado": {
+      "main": [
+        [
+          {
+            "node": "inicio",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "selección de prioridad",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "opciones",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "opción incorrecta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "encontrar ticket",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "opciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje de guardar solicitud": {
+      "main": [
+        [
+          {
+            "node": "guardar prioridad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "selección de prioridad": {
+      "main": [
+        [
+          {
+            "node": "guardar1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inicio": {
+      "main": [
+        [
+          {
+            "node": "estado2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "log de navegacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tipo de la solicitud": {
+      "main": [
+        [
+          {
+            "node": "Guardar descripcion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "descripción de la solicitud": {
+      "main": [
+        [
+          {
+            "node": "estado3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "encontrar ticket": {
+      "main": [
+        [
+          {
+            "node": "muestras la solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cargar los reportes": {
+      "main": [
+        [
+          {
+            "node": "reportes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cargar las solicitudes": {
+      "main": [
+        [
+          {
+            "node": "solicitudes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar el ticket": {
+      "main": [
+        [
+          {
+            "node": "Mensaje opcion 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reportes": {
+      "main": [
+        []
+      ]
+    },
+    "TRAER LOS DATOS": {
+      "main": [
+        [
+          {
+            "node": "PROCESAR LOS DATOS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PROCESAR LOS DATOS": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "procesando": {
+      "main": [
+        [
+          {
+            "node": "TRAER LOS DATOS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "menú falso": {
+      "main": [
+        [
+          {
+            "node": "estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "estado": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "4043ec2e-66c9-4e35-8378-109a91208775",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f953a0349a4d08b754c949d07c1723dec0ea16e9beca4a9bc5390f3fc39ec972"
+  },
+  "id": "7KRVzIg8VeN0wedi",
+  "tags": []
+}
